@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -116,7 +115,7 @@ abstract class Utilities {
     // zgodnie z tutorialem:
     // http://www.rubicite.com/Tutorials/GeneticAlgorithms/CrossoverOperators/Order1CrossoverOperator.aspx
     // zapewnia krzyżowanie osobników bez potrzeby ich naprawiania.
-    public static Specimen crossoverOrderI(Specimen parentSpec1, Specimen parentSpec2) {
+    private static Specimen crossoverOrderI(Specimen parentSpec1, Specimen parentSpec2) {
 
         int[] parent1 = parentSpec1.getGenes();
         int[] parent2 = parentSpec2.getGenes();
@@ -188,7 +187,6 @@ abstract class Utilities {
         List<Specimen> nexGen = new ArrayList<>(populationSize);
 
         int newGenerationCount = 0;
-        double localProbOfCross;
         while (newGenerationCount < populationSize) {
             int randIdx;
             for (int i = 0; i < tsize; i++) {
@@ -198,28 +196,54 @@ abstract class Utilities {
             tempPopulation.sort(Specimen::compareTo);
             nexGen.add(tempPopulation.get(0));
             newGenerationCount = newGenerationCount + 1;
-            if (newGenerationCount % 2 == 0) {
-                localProbOfCross = rand.nextDouble();
-                if (localProbOfCross < probOfCrossing) {
-                    Specimen c1 = crossoverOrderI(nexGen.get(newGenerationCount - 1), nexGen.get(newGenerationCount - 2));
-                    Specimen c2 = crossoverOrderI(nexGen.get(newGenerationCount - 2), nexGen.get(newGenerationCount - 1));
-                    nexGen.add(c1);
-                    nexGen.add(c2);
-                    newGenerationCount = newGenerationCount + 2;
-                } else {
-                    nexGen.get(newGenerationCount - 1).mutateSpecimen();
-                    nexGen.get(newGenerationCount - 2).mutateSpecimen();
-                }
-            }
+            newGenerationCount = doCrossingOrMutate(nexGen, newGenerationCount);
             tempPopulation.clear();
         }
         p.setPopulation(nexGen);
     }
 
-    public void rouletteWheelSelection() {
-        //TODO ruletka kurwa.
+    public static void rouletteWheel(Population p) {
+        List<Specimen> nexGen = new ArrayList<>(populationSize);
+        p.sortPopulation();
+        for (int i = 0; i < populationSize; i++) {
+            p.getSpecimen(i).setHelper(i + 1);
+        }
+        p.calcHelperSum();
+        int totalSum = p.getHelperSum();
+        int nextGenCounter = 0;
+        while (nextGenCounter < populationSize) {
+            int random = rand.nextInt(totalSum);
+            int partialSum = 0;
+            for (int j = 0; j < populationSize; j++) {
+                partialSum += p.getSpecimen(j).getHelper();
+                if (partialSum >= random) {
+                    nexGen.add(new Specimen(p.getSpecimen(j).getGenes()));
+                    nextGenCounter++;
+                    break;
+                }
+            }
+            if (nextGenCounter > 1) {
+                nextGenCounter = doCrossingOrMutate(nexGen, nextGenCounter);
+            }
+        }
+        p.setPopulation(nexGen);
+    }
 
-        //
-
+    private static int doCrossingOrMutate(List<Specimen> nexGen, int newGenerationCount) {
+        double localProbOfCross;
+        if (newGenerationCount % 2 == 0) {
+            localProbOfCross = rand.nextDouble();
+            if (localProbOfCross < probOfCrossing) {
+                Specimen c1 = crossoverOrderI(nexGen.get(newGenerationCount - 1), nexGen.get(newGenerationCount - 2));
+                Specimen c2 = crossoverOrderI(nexGen.get(newGenerationCount - 2), nexGen.get(newGenerationCount - 1));
+                nexGen.add(c1);
+                nexGen.add(c2);
+                newGenerationCount = newGenerationCount + 2;
+            } else {
+                nexGen.get(newGenerationCount - 1).mutateSpecimen();
+                nexGen.get(newGenerationCount - 2).mutateSpecimen();
+            }
+        }
+        return newGenerationCount;
     }
 }

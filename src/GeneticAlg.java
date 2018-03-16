@@ -1,7 +1,5 @@
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Scanner;
 
 public class GeneticAlg {
@@ -53,8 +51,19 @@ public class GeneticAlg {
         Population p = new Population();
         for (int i = 0; i < generations; i++) {
             Utilities.tourSelection(p);
+            //Utilities.rouletteWheel(p);
+            showGenerationStats(i, p);
         }
         p.sortPopulation();
         p.getSpecimen(0).sop();
+    }
+
+    private static void showGenerationStats(int generation, Population p) {
+        p.sortPopulation();
+        double avg = p.getPopulationFitness() / p.getSize();
+        int best = p.getSpecimen(0).getFitness();
+        int worst = p.getSpecimen(Population.getPopulationSize() - 1).getFitness();
+
+        System.out.println(generation + ", " + best + ", " + avg + ", " + worst);
     }
 }

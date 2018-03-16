@@ -7,7 +7,8 @@ public class Specimen implements Comparable<Specimen> {
     private int[] genes;
     private static int genesLength;
     private int fitness;
-    private double rouletteVariable = 0;
+    private double assignmentFactor = 0;
+    private int helper = 0;
 
     private static int[][] distMatrix;
     private static int[][] flowMatrix;
@@ -138,5 +139,21 @@ public class Specimen implements Comparable<Specimen> {
             g.append(genes[i]).append(", ");
         }
         System.out.println(g);
+    }
+
+    public double getAssignmentFactor() {
+        return assignmentFactor;
+    }
+
+    public void setAssignmentFactor(double assignmentFactor) {
+        this.assignmentFactor = assignmentFactor;
+    }
+
+    public int getHelper() {
+        return helper;
+    }
+
+    public void setHelper(int helper) {
+        this.helper = helper;
     }
 }

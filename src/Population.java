@@ -5,10 +5,13 @@ public class Population {
 
     private static int populationSize;
     private List<Specimen> population;
-
+    private static int fitnessSum = 0;
+    private double assignmentFactorSum = 0;
+    private int helperSum = 0;
     Population() {
         population = new ArrayList<>(populationSize);
         createPopulation();
+        calcRouletteAssignmentFactors();
     }
 
     public void mutatePopulation() {
@@ -53,6 +56,10 @@ public class Population {
         return this.population.size();
     }
 
+    public double getAssignmentFactorSum() {
+        return assignmentFactorSum;
+    }
+
     public void sortPopulation() {
         this.population.sort(Specimen::compareTo);
     }
@@ -63,11 +70,39 @@ public class Population {
         }
     }
 
+    private void calcRouletteAssignmentFactors() {
+
+        for (Specimen s : population) {
+            fitnessSum += s.getFitness();
+        }
+        double temp;
+        for (Specimen s : population) {
+            temp = fitnessSum / s.getFitness();
+            s.setAssignmentFactor(temp);
+            assignmentFactorSum = assignmentFactorSum + temp;
+        }
+        double temp2;
+        for (Specimen s : population) {
+            temp2 = s.getAssignmentFactor() / assignmentFactorSum;
+            s.setAssignmentFactor(temp2);
+        }
+    }
+
     public int getPopulationFitness() {
         int fitnessSummary = 0;
         for (Specimen s : population) {
             fitnessSummary = fitnessSummary + s.getFitness();
         }
         return fitnessSummary;
+    }
+
+    public void calcHelperSum() {
+        for (int i = 0; i < populationSize; i++) {
+            helperSum = helperSum + (i + 1);
+        }
+    }
+
+    public int getHelperSum() {
+        return helperSum;
     }
 }
