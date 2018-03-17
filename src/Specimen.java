@@ -1,3 +1,6 @@
+/*
+    Created by wroobell
+*/
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
@@ -7,7 +10,6 @@ public class Specimen implements Comparable<Specimen> {
     private int[] genes;
     private static int genesLength;
     private int fitness;
-    private double assignmentFactor = 0;
     private int helper = 0;
 
     private static int[][] distMatrix;
@@ -21,82 +23,49 @@ public class Specimen implements Comparable<Specimen> {
         initializeGenome();
         fitness = 0;
         calculateFitness();
-    }
+    }//Specimen()
 
     Specimen(int[] locations) {
         this.genes = locations;
         fitness = 0;
         genesLength = genes.length;
         calculateFitness();
-    }
-
-
-//    void mutateSpecimen()
-//    {
-//        int index1 = Utilities.getRandom(this);
-//        int index2 = Utilities.getRandom(this);
-//        while(index1 == index2){
-//            index2=Utilities.getRandom(this);
-//        }
-//        int temp = genes[index1];
-//        genes[index1]=genes[index2];
-//        genes[index2]=temp;
-//    }
-
-    public int[] getGenes() {
-        return genes;
-    }
-
-    public void setGenes(int[] genes) {
-        this.genes = genes;
-    }
-
-    public static int getGenesLength() {
-        return genesLength;
-    }
+    }//Specimen(int[] locations)
 
     public static void setGenesLength(int genesLength) {
         Specimen.genesLength = genesLength;
-    }
-
-    public int getFitness() {
-        return fitness;
-    }
-
-    public void setFitness(int fitness) {
-        this.fitness = fitness;
-    }
-
-    public static double getPofMutation() {
-        return pofMutation;
-    }
+    }//setGenesLength()
 
     public static void setPofMutation(double pofMutation) {
         Specimen.pofMutation = pofMutation;
-    }
-
-    public static int[][] getDistMatrix() {
-        return distMatrix;
-    }
+    }//setPofMutation()
 
     public static void setDistMatrix(int[][] distMatrix) {
         Specimen.distMatrix = distMatrix;
-    }
-
-    public static int[][] getFlowMatrix() {
-        return flowMatrix;
-    }
+    }//setDistMatrix()
 
     public static void setFlowMatrix(int[][] flowMatrix) {
         Specimen.flowMatrix = flowMatrix;
-    }
+    }//setFlowMatrix()
+
+    public int[] getGenes() {
+        return genes;
+    }//getGenes()
+
+    public void setGenes(int[] genes) {
+        this.genes = genes;
+    }//setGenes()
+
+    public int getFitness() {
+        return fitness;
+    }//getFitness()
 
     private void initializeGenome() {
         for (int i = 0; i < genesLength; i++) {
             genes[i] = i + 1;
         }
         Collections.shuffle(Arrays.asList(genes));
-    }
+    }//initializeGenome()
 
     public void calculateFitness() {
         this.fitness = 0;
@@ -104,12 +73,12 @@ public class Specimen implements Comparable<Specimen> {
             for (int j = (i + 1); j < (genesLength); j++) {
                 this.fitness += distMatrix[i][j] * (flowMatrix[genes[i] - 1][genes[j] - 1] + flowMatrix[genes[j] - 1][genes[i] - 1]);
             }
-    }
+    }//calculateFitness()
 
     public void mutateSpecimen() {
         double mutationChance;
         for (int i = 0; i < genes.length; i++) {
-            mutationChance = Math.random();
+            mutationChance = rand.nextDouble();
             if (mutationChance < pofMutation) {
                 swapRandomGene(i);
             }
@@ -128,32 +97,23 @@ public class Specimen implements Comparable<Specimen> {
     @Override
     public int compareTo(Specimen o) {
         return Integer.compare(this.fitness, o.getFitness());
-    }
+    }//Custom comparator compareTo
 
     public void sop() {
-        System.out.println("Fitness nejlepszego osobnika to: " + fitness);
-        System.out.println("Geny: ");
+        System.out.println("Best specimen fitness: " + fitness);
+        System.out.println("Genes: ");
         StringBuilder g = new StringBuilder();
-        for(int i = 0; i<genesLength; i++)
-        {
+        for(int i = 0; i<genesLength; i++) {
             g.append(genes[i]).append(", ");
         }
         System.out.println(g);
-    }
-
-    public double getAssignmentFactor() {
-        return assignmentFactor;
-    }
-
-    public void setAssignmentFactor(double assignmentFactor) {
-        this.assignmentFactor = assignmentFactor;
-    }
+    }//sop()
 
     public int getHelper() {
         return helper;
-    }
+    }//getHelper()
 
     public void setHelper(int helper) {
         this.helper = helper;
-    }
+    }//setHelper()
 }
