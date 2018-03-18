@@ -18,7 +18,7 @@ And change the parameters. API:
 
 I've also prvided two selection methods - tournament and rouletteWheel. 
 
-Just comment/uncomment line 56 or 57 `GeneticAlg.java` - depends on desired selection method.
+Just comment/uncomment line 58 or 57 `GeneticAlg.java` - depends on desired selection method.
 
 If you want to use other file (had 12,14,16,18,20) go to line 39 `GeneticAlg.java` and change the specified file name.
 
