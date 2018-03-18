@@ -160,6 +160,7 @@ abstract class Utilities {
                 newGenerationCount = newGenerationCount + 2;
                 nexGen.get(newGenerationCount - 1).mutateSpecimen();
                 nexGen.get(newGenerationCount - 2).mutateSpecimen();
+
             }//if
         }//if
         return newGenerationCount;
