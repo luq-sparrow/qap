@@ -11,7 +11,6 @@ I've created a method to initialize algorithm variables.
 Just find the lines below: (`GeneticAlg.java` - line `52`)
 
 `public static void runGeneticAlg() throws IOException { // Here you can set all the parameters
-
         GeneticAlg.initializeAlgorithmVariables(100, 100, 0.16, 0.7, 50);
         Population p = new Population();
         for (int i = 0; i < generations; i++) { // If you want to use roulette selection
